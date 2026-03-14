@@ -1,0 +1,27 @@
+import { prisma } from "@/lib/prisma";
+import { protect } from "@/lib/protect/protect";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+
+export default async function User({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  await protect("admin.users");
+
+  const user = await prisma.user.findUnique({
+    where: { id },
+  });
+  if (!user) {
+    return notFound();
+  }
+  return (
+    <div>
+      <Link href="/admin/users">&larr; Users</Link>
+      <h1>User</h1>
+      <pre>{JSON.stringify(user, null, 2)}</pre>
+    </div>
+  );
+}
