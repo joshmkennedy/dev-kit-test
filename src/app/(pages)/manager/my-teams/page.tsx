@@ -1,45 +1,33 @@
 import { prisma } from "@/lib/prisma";
 import { protect } from "@/lib/protect/protect";
+import { accessibleBy } from "@casl/prisma";
 import Link from "next/link";
 import { DataTable } from "@/app/components/data-table";
 import { type TeamRow, teamColumns } from "./team-columns";
 
 export default async function ManagerTeams() {
-  const session = await protect("manager.my-teams");
+  const { ability } = await protect("manager", "read", "Team");
 
-  const user = await prisma.user.findUnique({
-    where: {
-      email: session.user.email!,
-    },
+  const teams = await prisma.team.findMany({
+    where: accessibleBy(ability).Team,
     include: {
-      managedTeams: {
+      managers: {
         include: {
-          team: {
-            include: {
-              managers: {
-                include: {
-                  user: {
-                    select: {
-                      name: true,
-                      id: true,
-                    },
-                  },
-                },
-              },
+          user: {
+            select: {
+              name: true,
+              id: true,
             },
           },
         },
       },
     },
   });
-  if (!user) {
-    return <div>No managed teams found</div>;
-  }
 
-  const data: TeamRow[] = user.managedTeams.map((mt) => ({
-    id: mt.team.id,
-    name: mt.team.name,
-    teamManagers: mt.team.managers.map((m) => ({
+  const data: TeamRow[] = teams.map((team) => ({
+    id: team.id,
+    name: team.name,
+    teamManagers: team.managers.map((m) => ({
       id: m.user.id,
       name: m.user.name,
     })),

@@ -3,7 +3,7 @@ import { protect } from "@/lib/protect/protect";
 import Link from "next/link";
 
 export default async function User() {
-  const session = await protect("user");
+  const { session } = await protect("user", "read", "User");
 
   const user = await prisma.user.findUnique({
     where: {

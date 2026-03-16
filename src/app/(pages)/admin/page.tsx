@@ -2,7 +2,7 @@ import { protect } from "@/lib/protect/protect";
 import Link from "next/link";
 
 export default async function Admin() {
-  await protect("admin");
+  await protect("admin", "manage", "all");
 
   return (
     <div className="flex flex-col gap-4 items-start">

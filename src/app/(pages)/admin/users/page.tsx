@@ -6,7 +6,7 @@ import { columns, type UserRow } from "./components/columns";
 import Link from "next/link";
 
 export default async function Users() {
-  await protect("admin.users");
+  await protect("admin", "read", "User");
 
   const users = await prisma.user.findMany({
     take: 20,

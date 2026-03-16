@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { protect } from "@/lib/protect/protect";
+import { accessibleBy } from "@casl/prisma";
 import Link from "next/link";
 import { DataTable } from "@/app/components/data-table";
 import { type MemberRow, columns } from "./_components/columns";
@@ -11,47 +12,37 @@ export default async function ManagerTeamList({
   params: Promise<{ teamId: string }>;
 }) {
   const { teamId } = await params;
-  const session = await protect("manager.my-teams", { teamId });
+  const { ability } = await protect("manager", "read", "Team");
 
-  const user = await prisma.user.findUnique({
+  const caslWhere = accessibleBy(ability).Team;
+  console.log("CASL where clause:", JSON.stringify(caslWhere, null, 2));
+  console.log("Ability rules:", JSON.stringify(ability.rules, null, 2));
+
+  const team = await prisma.team.findFirst({
     where: {
-      email: session.user.email!,
+      AND: [caslWhere, { id: teamId }],
     },
     include: {
-      managedTeams: {
-        where: {
-          teamId,
-        },
-        include: {
-          team: {
-            include: {
-              members: {
-                select: {
-                  name: true,
-                  email: true,
-                  id: true,
-                },
-              },
-            },
-          },
+      members: {
+        select: {
+          name: true,
+          email: true,
+          id: true,
         },
       },
     },
   });
 
-  if (!user) {
+  if (!team) {
     return notFound();
   }
 
-  const data: MemberRow[] =
-    user.managedTeams
-      .find((t) => t.teamId === teamId)
-      ?.team.members.map((m) => ({
-        id: m.id,
-        name: m.name,
-        email: m.email,
-        teamId,
-      })) ?? [];
+  const data: MemberRow[] = team.members.map((m) => ({
+    id: m.id,
+    name: m.name,
+    email: m.email,
+    teamId,
+  }));
 
   return (
     <div>

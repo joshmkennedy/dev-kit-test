@@ -2,7 +2,7 @@ import { protect } from "@/lib/protect/protect";
 import Link from "next/link";
 
 export default async function Manager() {
-  await protect("manager");
+  await protect("manager", "read", "Team");
 
   return (
     <Link

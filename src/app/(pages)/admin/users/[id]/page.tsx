@@ -9,7 +9,7 @@ export default async function User({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  await protect("admin.users");
+  await protect("admin", "read", "User");
 
   const user = await prisma.user.findUnique({
     where: { id },

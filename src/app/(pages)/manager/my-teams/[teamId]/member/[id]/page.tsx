@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { protect } from "@/lib/protect/protect";
+import { accessibleBy } from "@casl/prisma";
 import { notFound } from "next/navigation";
 
 export default async function TeamMember({
@@ -9,12 +10,22 @@ export default async function TeamMember({
   params: Promise<{ id: string; teamId: string }>;
 }) {
   const { id, teamId } = await params;
-  await protect("manager.my-teams", { teamId });
-  const team = await prisma.team.findUnique({
+  const { ability:teamAbility } = await protect("manager", "read", "Team");
+  const { ability:userAbility } = await protect("manager", "read", "Team");
+
+  // Verify the logged-in user manages this team
+  const team = await prisma.team.findFirst({
     where: {
-      id: teamId,
-    }
-  })
+      AND: [accessibleBy(teamAbility).Team, { id: teamId }],
+    },
+    select: { name: true },
+  });
+
+  if (!team) {
+    return notFound();
+  }
+
+  // Fetch the member
   const user = await prisma.user.findUnique({
     where: {
       id,
@@ -23,6 +34,7 @@ export default async function TeamMember({
           id: teamId,
         },
       },
+      AND: [accessibleBy(userAbility).User, { id }],
     },
     include: {
       teams: true,
@@ -36,7 +48,7 @@ export default async function TeamMember({
   return (
     <div>
       <Link href={`/manager/my-teams/${teamId}`}>
-        &larr; {team?.name ?? teamId}
+        &larr; {team.name}
       </Link>
       <h1>Team Member</h1>
       <pre>{JSON.stringify(user, null, 2)}</pre>
