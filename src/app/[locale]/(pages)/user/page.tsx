@@ -1,6 +1,7 @@
+import Link from "next/link";
+import { Text } from "@/lib/copy/text";
 import { prisma } from "@/lib/prisma";
 import { protect } from "@/lib/protect/protect";
-import Link from "next/link";
 
 export default async function User() {
   const { session } = await protect("user", "read", "User");
@@ -17,7 +18,7 @@ export default async function User() {
   return (
     <div className="flex flex-col gap-4 items-start">
       <div>
-        <h1>User</h1>
+        <h1><Text cid="user.page.title" description="Page title for /user">User</Text></h1>
         <p>{user.name}</p>
       </div>
 
@@ -25,7 +26,9 @@ export default async function User() {
         href="/user/profile"
         className="p-3 bg-purple-100 text-purple-800 dark:bg-purple-800 dark:text-purple-100 rounded-md "
       >
-        Profile
+        <Text cid="user.page.link.profile" description="Nav link for /user/profile">
+          Profile
+        </Text>
       </Link>
     </div>
   );

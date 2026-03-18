@@ -86,3 +86,19 @@ model VerificationToken {
 
   @@unique([identifier, token])
 }
+
+model Copy {
+  id           String        @id
+  description  String?
+  translations Translation[]
+}
+
+model Translation {
+  id      String @id @default(cuid())
+  copyId  String
+  locale  String
+  content String
+  Copy    Copy   @relation(fields: [copyId], references: [id], onDelete: Cascade)
+
+  @@unique([copyId, locale])
+}

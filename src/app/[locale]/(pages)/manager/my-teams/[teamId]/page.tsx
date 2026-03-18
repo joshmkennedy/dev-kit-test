@@ -1,10 +1,11 @@
-import { prisma } from "@/lib/prisma";
-import { protect } from "@/lib/protect/protect";
 import { accessibleBy } from "@casl/prisma";
 import Link from "next/link";
-import { DataTable } from "@/app/components/data-table";
-import { type MemberRow, columns } from "./_components/columns";
 import { notFound } from "next/navigation";
+import { DataTable } from "@/app/components/data-table";
+import { Text } from "@/lib/copy/text";
+import { prisma } from "@/lib/prisma";
+import { protect } from "@/lib/protect/protect";
+import { columns, type MemberRow } from "./_components/columns";
 
 export default async function ManagerTeamList({
   params,
@@ -46,8 +47,26 @@ export default async function ManagerTeamList({
 
   return (
     <div>
-      <h1 className="text-xl font-bold mb-4">Members</h1>
-      <Link href="/manager/my-teams">&larr; Teams</Link>
+      <Link href="/manager/my-teams">
+        &larr;{" "}
+        <Text
+          cid="manager.my-teams.page.link.back"
+          description="Back link for /manager/my-teams"
+        >
+          My Teams
+        </Text>
+      </Link>
+
+      <h1 className="text-xl font-bold mb-4">
+        <Text
+          cid="manager.my-teams.page.title-prefix"
+          description="Page title prefix for /manager/my-teams/[teamId]. Goes before the team name."
+        >
+          Team:
+        </Text>{" "}
+        {team.name}
+      </h1>
+
       <div className="mt-4">
         <DataTable columns={columns} data={data} />
       </div>

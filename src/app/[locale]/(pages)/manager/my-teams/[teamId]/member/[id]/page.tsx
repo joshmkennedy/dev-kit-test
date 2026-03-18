@@ -3,6 +3,9 @@ import { prisma } from "@/lib/prisma";
 import { protect } from "@/lib/protect/protect";
 import { accessibleBy } from "@casl/prisma";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
+import { PageDescription } from "./_components/page-description";
+import { Text } from "@/lib/copy/text";
 
 export default async function TeamMember({
   params,
@@ -10,8 +13,8 @@ export default async function TeamMember({
   params: Promise<{ id: string; teamId: string }>;
 }) {
   const { id, teamId } = await params;
-  const { ability:teamAbility } = await protect("manager", "read", "Team");
-  const { ability:userAbility } = await protect("manager", "read", "Team");
+  const { ability: teamAbility } = await protect("manager", "read", "Team");
+  const { ability: userAbility } = await protect("manager", "read", "Team");
 
   // Verify the logged-in user manages this team
   const team = await prisma.team.findFirst({
@@ -47,10 +50,13 @@ export default async function TeamMember({
 
   return (
     <div>
-      <Link href={`/manager/my-teams/${teamId}`}>
-        &larr; {team.name}
-      </Link>
-      <h1>Team Member</h1>
+      <Link href={`/manager/my-teams/${teamId}`}>&larr; {team.name}</Link>
+      <h1>
+        <Text cid="team-member.page.description">page description</Text>
+      </h1>
+      <Suspense fallback="page description">
+        <PageDescription/>
+      </Suspense>
       <pre>{JSON.stringify(user, null, 2)}</pre>
     </div>
   );

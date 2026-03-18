@@ -4,6 +4,7 @@ import { protect } from "@/lib/protect/protect";
 import { DataTable } from "@/app/components/data-table";
 import { columns, type UserRow } from "./components/columns";
 import Link from "next/link";
+import { Text } from "@/lib/copy/text";
 
 export default async function Users() {
   await protect("admin", "read", "User");
@@ -26,7 +27,16 @@ export default async function Users() {
   return (
     <div>
       <Link href="/admin">&larr; Admin</Link>
-      <h1>Users</h1>
+
+      <h1>
+        <Text
+					cid="admin.users.page.title"
+					description="Page title for /admin/users"
+				>
+					Users
+				</Text>
+      </h1>
+
       <div>
         <DataTable columns={columns} data={data} />
       </div>

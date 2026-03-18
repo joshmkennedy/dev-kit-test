@@ -1,35 +1,22 @@
 import { auth } from "@/lib/auth";
-// import { matchPolicy } from "@/lib/protect/policy";
+import { i18nRouter } from "next-i18n-router";
+import { i18nConfig } from "@/lib/i18n/i18n-config";
 import { NextResponse } from "next/server";
 
 export default auth((req) => {
-  // const { pathname } = req.nextUrl;
+  const { pathname } = req.nextUrl;
   const session = req.auth;
-
-  // const policy = matchPolicy(pathname);
-  // if (!policy) return;
 
   if (!session?.user) {
     return NextResponse.redirect(new URL("/api/auth/signin", req.url));
   }
 
-  // const userRoles = session.user.roles ?? [];
-  // const hasRole = policy.roles.some((r) => userRoles.includes(r));
+  // Skip locale detection for API routes
+  if (pathname.startsWith("/api/")) {
+    return NextResponse.next();
+  }
 
-  // if (!hasRole) {
-  //   return NextResponse.redirect(new URL("/not-found", req.url));
-  // }
-
-  const response = NextResponse.next();
-  // response.headers.set("x-policy-id", policy.id);
-  // if (policy.scope) {
-  //   response.headers.set("x-policy-scope", policy.scope);
-  // }
-  // if (policy.resourceParam) {
-  //   response.headers.set("x-resource-param", policy.resourceParam);
-  // }
-
-  return response;
+  return i18nRouter(req, { ...i18nConfig, prefixDefault: false });
 });
 
 export const config = {
