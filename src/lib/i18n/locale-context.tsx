@@ -1,9 +1,8 @@
 "use client";
 
 import { createContext, useContext } from "react";
-import { i18nConfig } from "./i18n-config";
 
-const LocaleContext = createContext<string>(i18nConfig.defaultLocale);
+const LocaleContext = createContext<string>("en");
 
 export function LocaleProvider({
   locale,

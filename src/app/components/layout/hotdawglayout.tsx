@@ -1,11 +1,14 @@
 "use client";
 import { useSession } from "next-auth/react";
-export default function Layout({
+
+export function _Layout({
   children,
   nav,
+  copyright,
 }: {
   children: React.ReactNode;
   nav?: React.ReactNode;
+  copyright?: React.ReactNode;
 }) {
   const { data } = useSession();
 
@@ -25,7 +28,9 @@ export default function Layout({
         <main className="flex-1 p-10">{children}</main>
       </div>
       <footer>
-        <p>Suck It</p>
+        <p>
+          {copyright}
+        </p>
       </footer>
     </div>
   );

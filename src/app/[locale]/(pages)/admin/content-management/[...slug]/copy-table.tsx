@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, useTransition } from "react";
+import Link from "next/link";
 import type { CopyWithTranslations } from "@/lib/copy/group-copy";
 import { updateCopy } from "../handle-save";
 
@@ -21,6 +22,9 @@ function EditModal({
   const [isPending, startTransition] = useTransition();
   const backdropRef = useRef<HTMLDivElement>(null);
 
+  const enContent = copy.translations.find((t) => t.locale === "en")?.content;
+  const isNonEnglish = locale !== "en";
+
   function handleSave() {
     startTransition(async () => {
       await updateCopy(copy.id, locale, content);
@@ -40,22 +44,40 @@ function EditModal({
     >
       <div className="bg-gray-800 border border-white/10 rounded-lg shadow-xl w-full max-w-lg p-6 space-y-4">
         <div>
-          <h3 className="text-lg font-semibold">Edit Copy</h3>
+          <h3 className="text-lg font-semibold">
+            Edit Copy <span className="text-foreground/40 font-normal">({locale.toUpperCase()})</span>
+          </h3>
           <code className="text-xs text-blue-400/80">{copy.id}</code>
-          <span className="text-xs text-foreground/40 ml-2">({locale})</span>
           {copy.description && (
             <p className="text-xs text-foreground/40 mt-1">
               {copy.description}
             </p>
           )}
         </div>
-        <textarea
-          className="w-full bg-white/10 border border-white/20 rounded-md px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500 resize-y min-h-25"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          // biome-ignore lint/a11y/noAutofocus: I do what I want
-          autoFocus={true}
-        />
+
+        {isNonEnglish && enContent && (
+          <div>
+            <p className="text-xs text-foreground/40 mb-1">English (reference)</p>
+            <div className="bg-white/5 border border-white/10 rounded-md px-3 py-2 text-sm text-foreground/60">
+              {enContent}
+            </div>
+          </div>
+        )}
+
+        <div>
+          {isNonEnglish && (
+            <p className="text-xs text-foreground/40 mb-1">{locale.toUpperCase()} translation</p>
+          )}
+          <textarea
+            className="w-full bg-white/10 border border-white/20 rounded-md px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500 resize-y min-h-25"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            placeholder={isNonEnglish ? "No translation yet..." : ""}
+            // biome-ignore lint/a11y/noAutofocus: I do what I want
+            autoFocus={true}
+          />
+        </div>
+
         <div className="flex justify-end gap-2">
           <button
             type="button"
@@ -86,47 +108,30 @@ function getContent(copy: CopyWithTranslations, locale: string): string {
   return en?.content ?? "";
 }
 
-export function CopyTable({ entries, locales }: { entries: CopyWithTranslations[]; locales: readonly string[] }) {
-  const [selectedLocale, setSelectedLocale] = useState(locales[0]);
-  const [editing, setEditing] = useState<CopyWithTranslations | null>(null);
-  const [contentMap, setContentMap] = useState<Record<string, string>>(() =>
-    Object.fromEntries(entries.map((e) => [e.id, getContent(e, selectedLocale)])),
-  );
+function getTranslationContent(copy: CopyWithTranslations, locale: string): string {
+  return copy.translations.find((t) => t.locale === locale)?.content ?? "";
+}
 
-  function handleLocaleChange(locale: string) {
-    setSelectedLocale(locale);
-    setContentMap(
-      Object.fromEntries(entries.map((e) => [e.id, getContent(e, locale)])),
-    );
+export function CopyTable({ entries, locales }: { entries: CopyWithTranslations[]; locales: string[] }) {
+  const [editing, setEditing] = useState<{ copy: CopyWithTranslations; locale: string } | null>(null);
+  const [contentOverrides, setContentOverrides] = useState<Record<string, Record<string, string>>>({});
+
+  function getDisplayContent(copy: CopyWithTranslations, locale: string): string {
+    return contentOverrides[copy.id]?.[locale] ?? getContent(copy, locale);
+  }
+
+  function openEditModal(copy: CopyWithTranslations, locale: string) {
+    setEditing({ copy, locale });
   }
 
   return (
     <>
-      {locales.length > 1 && (
-        <div className="flex gap-2 mb-4">
-          {locales.map((locale) => (
-            <button
-              key={locale}
-              type="button"
-              onClick={() => handleLocaleChange(locale)}
-              className={`px-3 py-1 text-sm rounded-md ${
-                selectedLocale === locale
-                  ? "bg-blue-600 text-white"
-                  : "bg-white/10 text-white/60 hover:bg-white/20"
-              }`}
-            >
-              {locale.toUpperCase()}
-            </button>
-          ))}
-        </div>
-      )}
-
       <table className="w-full text-left text-sm">
         <thead>
           <tr className="border-b border-white/10">
             <th className="px-4 py-3 font-medium text-foreground/60">ID</th>
             <th className="px-4 py-3 font-medium text-foreground/60">
-              Content
+              Content (EN)
             </th>
             <th className="px-4 py-3 font-medium text-foreground/60" />
           </tr>
@@ -138,7 +143,12 @@ export function CopyTable({ entries, locales }: { entries: CopyWithTranslations[
               className="border-b border-white/5 hover:bg-white/5"
             >
               <td className="px-4 py-3 align-top">
-                <code className="text-xs text-blue-400/80">{copy.id}</code>
+                <Link
+                  href={`/admin/content-management/field/${encodeURIComponent(copy.id)}`}
+                  className="text-xs text-blue-400/80 hover:underline"
+                >
+                  <code>{copy.id}</code>
+                </Link>
                 {copy.description && (
                   <p className="text-xs text-foreground/40 mt-0.5">
                     {copy.description}
@@ -146,16 +156,38 @@ export function CopyTable({ entries, locales }: { entries: CopyWithTranslations[
                 )}
               </td>
               <td className="px-4 py-3 align-top text-sm">
-                {contentMap[copy.id]}
+                {getDisplayContent(copy, "en")}
               </td>
               <td className="px-4 py-3 align-top">
-                <button
-                  type="button"
-                  onClick={() => setEditing(copy)}
-                  className="px-2 py-1 text-xs bg-white/10 hover:bg-white/20 rounded-md text-white/60"
-                >
-                  Edit
-                </button>
+                {locales.length === 1 ? (
+                  <button
+                    type="button"
+                    onClick={() => openEditModal(copy, "en")}
+                    className="px-2 py-1 text-xs bg-white/10 hover:bg-white/20 rounded-md text-white/60"
+                  >
+                    Edit
+                  </button>
+                ) : (
+                  <select
+                    value=""
+                    onChange={(e) => {
+                      if (e.target.value) openEditModal(copy, e.target.value);
+                    }}
+                    className="bg-white/10 border border-white/20 rounded-md px-2 py-1 text-xs text-white/60 focus:outline-none focus:border-blue-500 cursor-pointer"
+                  >
+                    <option value="" disabled>
+                      Edit...
+                    </option>
+                    {locales.map((locale) => {
+                      const hasTranslation = copy.translations.some((t) => t.locale === locale);
+                      return (
+                        <option key={locale} value={locale} className="bg-gray-800">
+                          {locale.toUpperCase()}{hasTranslation ? "" : " (missing)"}
+                        </option>
+                      );
+                    })}
+                  </select>
+                )}
               </td>
             </tr>
           ))}
@@ -164,12 +196,30 @@ export function CopyTable({ entries, locales }: { entries: CopyWithTranslations[
 
       {editing && (
         <EditModal
-          copy={editing}
-          locale={selectedLocale}
-          content={contentMap[editing.id] ?? ""}
+          copy={editing.copy}
+          locale={editing.locale}
+          content={getTranslationContent(editing.copy, editing.locale)}
           onClose={() => setEditing(null)}
           onSaved={(content) => {
-            setContentMap((prev) => ({ ...prev, [editing.id]: content }));
+            setContentOverrides((prev) => ({
+              ...prev,
+              [editing.copy.id]: {
+                ...prev[editing.copy.id],
+                [editing.locale]: content,
+              },
+            }));
+            // Update the copy's translations in memory for future edits
+            const existing = editing.copy.translations.find((t) => t.locale === editing.locale);
+            if (existing) {
+              existing.content = content;
+            } else {
+              editing.copy.translations.push({
+                id: "",
+                copyId: editing.copy.id,
+                locale: editing.locale,
+                content,
+              });
+            }
             setEditing(null);
           }}
         />

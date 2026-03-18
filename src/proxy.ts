@@ -1,9 +1,23 @@
 import { auth } from "@/lib/auth";
 import { i18nRouter } from "next-i18n-router";
-import { i18nConfig } from "@/lib/i18n/i18n-config";
+import { defaultLocale } from "@/lib/i18n/i18n-config";
+import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
-export default auth((req) => {
+let cachedLocales: string[] | null = null;
+let cacheTime = 0;
+const CACHE_TTL = 60_000; // 1 minute
+
+async function getLocales() {
+  const now = Date.now();
+  if (cachedLocales && now - cacheTime < CACHE_TTL) return cachedLocales;
+  const rows = await prisma.supportedLocale.findMany();
+  cachedLocales = rows.length > 0 ? rows.map((r) => r.code) : [defaultLocale];
+  cacheTime = now;
+  return cachedLocales;
+}
+
+export default auth(async (req) => {
   const { pathname } = req.nextUrl;
   const session = req.auth;
 
@@ -16,7 +30,8 @@ export default auth((req) => {
     return NextResponse.next();
   }
 
-  return i18nRouter(req, { ...i18nConfig, prefixDefault: false });
+  const locales = await getLocales();
+  return i18nRouter(req, { locales, defaultLocale, prefixDefault: false });
 });
 
 export const config = {

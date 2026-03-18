@@ -1,5 +1,5 @@
 "use client";
-import { memo, useState, type ReactNode } from "react";
+import { memo, type ReactNode, useState } from "react";
 
 type TabConfig = {
   name: string;

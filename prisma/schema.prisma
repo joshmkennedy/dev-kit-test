@@ -87,6 +87,9 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+
+// -- Copy Management and Localization -----------------------------------------
+
 model Copy {
   id           String        @id
   description  String?
@@ -101,4 +104,9 @@ model Translation {
   Copy    Copy   @relation(fields: [copyId], references: [id], onDelete: Cascade)
 
   @@unique([copyId, locale])
+}
+
+model SupportedLocale {
+  code String @id
+  name String
 }

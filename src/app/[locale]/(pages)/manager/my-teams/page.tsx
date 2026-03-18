@@ -2,8 +2,9 @@ import { prisma } from "@/lib/prisma";
 import { protect } from "@/lib/protect/protect";
 import { accessibleBy } from "@casl/prisma";
 import Link from "next/link";
-import { DataTable } from "@/app/components/data-table";
-import { type TeamRow, teamColumns } from "./team-columns";
+import { Text } from "@/lib/copy/text";
+import type { TeamRow } from "./team-columns";
+import { TeamsTable } from "./teams-table";
 
 export default async function ManagerTeams() {
   const { ability } = await protect("manager", "read", "Team");
@@ -36,9 +37,9 @@ export default async function ManagerTeams() {
   return (
     <div>
       <h1 className="text-xl font-bold mb-4">Teams</h1>
-      <Link href="/manager">&larr; Dashboard</Link>
+      <Link href="/manager">&larr; <Text cid="manager.myteams.page.title">Dashboard</Text></Link>
       <div className="mt-4">
-        <DataTable columns={teamColumns} data={data} />
+        <TeamsTable data={data} />
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import { type ReactNode, Suspense } from "react";
 import { AuthTool } from "./components/auth-tool";
 import { PageTool } from "./components/page-tool";
+import { LocaleTool } from "./components/locale-tool";
 
 export type Tab = {
   name: string;
@@ -25,6 +26,12 @@ export const tabs: Tab[] = [
     id: "page",
     icon: "📄",
     panel: <PageTool />,
+  },
+  {
+    name: "Locale",
+    id: "locale",
+    icon: "🌐",
+    panel: <LocaleTool />,
   },
   {
     name: "Prisma",

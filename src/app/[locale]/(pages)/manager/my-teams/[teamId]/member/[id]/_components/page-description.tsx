@@ -29,7 +29,6 @@ function Text({cid, fallback}:{cid:import("@/generated/copy-ids").CopyId, fallba
   const [ content, setContent ] = React.useState("");
   const [ copyPromise, setCopyPromise ] = React.useState<Promise<Record<string, string>>|undefined>();
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: Shut up biome
   React.useEffect(() => {
     setCopyPromise(getAllCopyMap());
   },[]);

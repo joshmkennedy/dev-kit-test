@@ -1,6 +1,6 @@
-import { i18nConfig } from "./i18n-config";
+import { defaultLocale } from "./i18n-config";
 
 export function localePath(path: string, locale: string): string {
-  if (locale === i18nConfig.defaultLocale) return path;
+  if (locale === defaultLocale) return path;
   return `/${locale}${path}`;
 }

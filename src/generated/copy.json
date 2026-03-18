@@ -1,0 +1,102 @@
+[
+  {
+    "id": "admin.users.page.title",
+    "description": "Page title for /admin/users",
+    "content": "Users"
+  },
+  {
+    "id": "admin.content-slug.page.backlink",
+    "description": "Content Editor back link to all content",
+    "content": "Content Management"
+  },
+  {
+    "id": "admin.content-mgmt.page.title",
+    "description": "Admin Content Management Page title",
+    "content": "Content Management"
+  },
+  {
+    "id": "admin.content-mgmt.page.description",
+    "description": "a description for that top level Admin Content Management Page girl...",
+    "content": "Manage all copy entries across your application."
+  },
+  {
+    "id": "admin.page.title",
+    "description": "",
+    "content": "Admin"
+  },
+  {
+    "id": "admin.page.description-forrealsies",
+    "description": "Admin page description",
+    "content": "For all you admining needs"
+  },
+  {
+    "id": "admin.page.link.content-management",
+    "description": "",
+    "content": "Content Management"
+  },
+  {
+    "id": "user.profile.page.link.back",
+    "description": "Nav link for /user",
+    "content": "User"
+  },
+  {
+    "id": "user.page.title",
+    "description": "Page title for /user",
+    "content": "User"
+  },
+  {
+    "id": "user.page.link.profile",
+    "description": "Nav link for /user/profile",
+    "content": "Profile"
+  },
+  {
+    "id": "team-member.page-description.more",
+    "description": "page description",
+    "content": "page description"
+  },
+  {
+    "id": "team-member.page.description",
+    "description": "",
+    "content": "page description"
+  },
+  {
+    "id": "manager.my-teams.page.link.back",
+    "description": "Back link for /manager/my-teams",
+    "content": "My Teams"
+  },
+  {
+    "id": "manager.my-teams.page.title-prefix",
+    "description": "Page title prefix for /manager/my-teams/[teamId]. Goes before the team name.",
+    "content": "Team:"
+  },
+  {
+    "id": "manager.my-teams.column.team-name",
+    "description": "Column header for team name",
+    "content": "Team Name"
+  },
+  {
+    "id": "manager.my-teams.column.managers",
+    "description": "Column header for managers",
+    "content": "Managers"
+  },
+  {
+    "id": "manager.myteams.page.title",
+    "description": "",
+    "content": "Dashboard"
+  },
+  {
+    "id": "manager.page.link.my-teams",
+    "description": "Nav link for /manager/my-teams",
+    "content": "My Teams"
+  },
+  {
+    "id": "layout.copyright",
+    "description": "Copyright notice",
+    "content": "Suck IT!"
+  },
+  {
+    "id": "auth-tool.panel.title",
+    "description": "auth tool panel title",
+    "content": "Auth Tool"
+  }
+]

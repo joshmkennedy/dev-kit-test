@@ -1,7 +1,7 @@
 import { cache } from "react";
-import { prisma } from "@/lib/prisma";
-import { getLocale } from "@/lib/i18n/get-locale";
 import type { CopyId } from "@/generated/copy-ids";
+import { getLocale } from "@/lib/i18n/get-locale";
+import { prisma } from "@/lib/prisma";
 
 const getAllCopy = cache(async (locale: string) => {
   const translations = await prisma.translation.findMany({

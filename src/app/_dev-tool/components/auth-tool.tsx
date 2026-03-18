@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { DataTable } from "@/app/components/data-table";
 import { columns } from "./auth-columns";
 import { updateManagedTeams, updateRoles } from "./auth-tool-actions";
+import { Text } from "@/lib/copy/text";
 
 export async function AuthTool() {
   const session = await auth();
@@ -66,7 +67,11 @@ export async function AuthTool() {
 
   return (
     <div>
-      <h1>Auth Tool</h1>
+      <h1>
+        <Text cid="auth-tool.panel.title" description="auth tool panel title" >
+          Auth Tool
+        </Text>
+      </h1>
       <DataTable columns={columns} data={rows} />
     </div>
   );

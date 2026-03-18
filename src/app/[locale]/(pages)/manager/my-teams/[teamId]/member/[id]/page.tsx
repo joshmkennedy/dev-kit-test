@@ -1,11 +1,11 @@
-import Link from "next/link";
-import { prisma } from "@/lib/prisma";
-import { protect } from "@/lib/protect/protect";
 import { accessibleBy } from "@casl/prisma";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import { PageDescription } from "./_components/page-description";
 import { Text } from "@/lib/copy/text";
+import { prisma } from "@/lib/prisma";
+import { protect } from "@/lib/protect/protect";
+import { PageDescription } from "./_components/page-description";
 
 export default async function TeamMember({
   params,

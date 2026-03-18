@@ -5,7 +5,6 @@ import { prisma } from "@/lib/prisma";
 import { protect } from "@/lib/protect/protect";
 import { CopyTable } from "./copy-table";
 import { Text } from "@/lib/copy/text";
-import { i18nConfig } from "@/lib/i18n/i18n-config";
 
 export const dynamic = "force-dynamic";
 
@@ -23,8 +22,12 @@ export default async function ContentDetail({
     notFound();
   }
 
-  const data = await prisma.copy.findMany({ include: { translations: true } });
+  const [data, supportedLocales] = await Promise.all([
+    prisma.copy.findMany({ include: { translations: true } }),
+    prisma.supportedLocale.findMany(),
+  ]);
   const grouped = groupCopy(data);
+  const locales = supportedLocales.map((l) => l.code);
 
   let entries: CopyWithTranslations[];
   let title: string;
@@ -58,7 +61,7 @@ export default async function ContentDetail({
           {entries.length === 1 ? "entry" : "entries"}
         </p>
       </div>
-      <CopyTable entries={entries} locales={i18nConfig.locales} />
+      <CopyTable entries={entries} locales={locales} />
     </div>
   );
 }

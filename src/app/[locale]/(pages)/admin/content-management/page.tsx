@@ -3,6 +3,7 @@ import { groupCopy } from "@/lib/copy/group-copy";
 import { Text } from "@/lib/copy/text";
 import { prisma } from "@/lib/prisma";
 import { protect } from "@/lib/protect/protect";
+import { LocaleManager } from "./locale-manager";
 
 export const dynamic = "force-dynamic";
 
@@ -10,6 +11,7 @@ export default async function ContentManagement() {
   await protect("admin", "read", "all");
   const data = await prisma.copy.findMany({ include: { translations: true } });
   const grouped = groupCopy(data);
+  const locales = await prisma.supportedLocale.findMany();
 
   const pages = Object.entries(grouped.pages).sort(([a], [b]) =>
     a.localeCompare(b),
@@ -28,6 +30,11 @@ export default async function ContentManagement() {
           <Text cid="admin.content-mgmt.page.description" description="a description for that top level Admin Content Management Page girl..."> Manage all copy entries across your application.</Text>
         </p>
       </div>
+
+      <section>
+        <h2 className="text-2xl font-semibold mb-4">Languages</h2>
+        <LocaleManager locales={locales} />
+      </section>
 
       <section>
         <h2 className="text-2xl font-semibold mb-4">Pages</h2>
