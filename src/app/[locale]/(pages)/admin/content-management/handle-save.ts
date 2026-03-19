@@ -19,12 +19,14 @@ export async function updateCopy(copyId: string, locale: string, content: string
 }
 
 export async function addLocale(code: string, name: string) {
+  await protect("admin", "manage", "all");
   await prisma.supportedLocale.create({ data: { code, name } });
   revalidatePath("/");
   return { code, name };
 }
 
 export async function removeLocale(code: string) {
+  await protect("admin", "manage", "all");
   await prisma.$transaction([
     prisma.translation.deleteMany({ where: { locale: code } }),
     prisma.supportedLocale.delete({ where: { code } }),

@@ -1,7 +1,7 @@
-import { prisma } from "@/lib/prisma";
-import { protect } from "@/lib/protect/protect";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { prisma } from "@/lib/prisma";
+import { protect } from "@/lib/protect/protect";
 
 export default async function User({
   params,

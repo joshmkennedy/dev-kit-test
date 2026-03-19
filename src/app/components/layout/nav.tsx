@@ -1,14 +1,32 @@
 import Link from "next/link";
-import { auth } from "@/lib/auth";
 import { type Domain, defineAbilitiesFor } from "@/lib/abilities";
-
-const navItems = [
-  { label: "Admin", href: "/admin", domain: "admin" as Domain, action: "manage", subject: "all" as const },
-  { label: "Manager", href: "/manager", domain: "manager" as Domain, action: "read", subject: "Team" as const },
-  { label: "Dashboard", href: "/user", domain: "user" as Domain, action: "read", subject: "User" as const },
-];
+import { auth } from "@/lib/auth";
+import { t } from "@/lib/copy/t";
 
 export async function Nav() {
+  const navItems = [
+    {
+      label: await t("nav.item.admin", "Admin", "admin nav item"),
+      href: "/admin",
+      domain: "admin" as Domain,
+      action: "manage",
+      subject: "all" as const,
+    },
+    {
+      label: t("nav.item.manager", "Manager", "manager nav item"),
+      href: "/manager",
+      domain: "manager" as Domain,
+      action: "read",
+      subject: "Team" as const,
+    },
+    {
+      label:t( "nav.item.dashboard", "Dashboard", "dashboard nav item"),
+      href: "/user",
+      domain: "user" as Domain,
+      action: "read",
+      subject: "User" as const,
+    },
+  ];
   const session = await auth();
   if (!session?.user) return null;
 

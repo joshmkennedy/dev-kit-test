@@ -98,5 +98,20 @@
     "id": "auth-tool.panel.title",
     "description": "auth tool panel title",
     "content": "Auth Tool"
+  },
+  {
+    "id": "nav.item.admin",
+    "description": "admin nav item",
+    "content": "Admin"
+  },
+  {
+    "id": "nav.item.manager",
+    "description": "manager nav item",
+    "content": "Manager"
+  },
+  {
+    "id": "nav.item.dashboard",
+    "description": "dashboard nav item",
+    "content": "Dashboard"
   }
 ]

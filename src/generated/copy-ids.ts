@@ -19,4 +19,7 @@ export type CopyId =
   | "manager.myteams.page.title"
   | "manager.page.link.my-teams"
   | "layout.copyright"
-  | "auth-tool.panel.title";
+  | "auth-tool.panel.title"
+  | "nav.item.admin"
+  | "nav.item.manager"
+  | "nav.item.dashboard";

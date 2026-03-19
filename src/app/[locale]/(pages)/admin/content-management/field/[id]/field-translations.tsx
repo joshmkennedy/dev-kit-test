@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useRef, useEffect, useTransition } from "react";
-import type { Translation, SupportedLocale } from "@/generated/prisma/client";
+import { useEffect, useRef, useState, useTransition } from "react";
+import type { SupportedLocale, Translation } from "@/generated/prisma/client";
 import { updateCopy } from "../../handle-save";
 
 function InlineEdit({

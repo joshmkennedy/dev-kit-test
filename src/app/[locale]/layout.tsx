@@ -1,10 +1,10 @@
 import { SessionProvider } from "next-auth/react";
+import { Text } from "@/lib/copy/text";
+import { getSupportedLocaleCodes } from "@/lib/i18n/i18n-config";
+import { LocaleProvider } from "@/lib/i18n/locale-context";
 import { DevToolWrapper } from "../_dev-tool";
 import { _Layout as Layout } from "../components/layout/hotdawglayout";
 import { Nav } from "../components/layout/nav";
-import { Text } from "@/lib/copy/text";
-import { LocaleProvider } from "@/lib/i18n/locale-context";
-import { getSupportedLocaleCodes } from "@/lib/i18n/i18n-config";
 
 export async function generateStaticParams() {
   const codes = await getSupportedLocaleCodes();
