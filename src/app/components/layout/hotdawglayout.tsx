@@ -1,5 +1,6 @@
 "use client";
 import { useSession } from "next-auth/react";
+import { useEditableTextHints } from "@/lib/copy/editable-text";
 
 export function _Layout({
   children,
@@ -11,6 +12,8 @@ export function _Layout({
   copyright?: React.ReactNode;
 }) {
   const { data } = useSession();
+  
+  useEditableTextHints()
 
   return (
     <div className="flex flex-col min-h-screen bg-zinc-50 font-sans dark:bg-black">

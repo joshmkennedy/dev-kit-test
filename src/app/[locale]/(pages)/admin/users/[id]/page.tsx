@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { protect } from "@/lib/protect/protect";
+import { Text } from "@/lib/copy/text";
 
 export default async function User({
   params,
@@ -20,7 +21,9 @@ export default async function User({
   return (
     <div>
       <Link href="/admin/users">&larr; Users</Link>
-      <h1>User</h1>
+      <h1>
+        <Text cid="user.page.title">User</Text>
+      </h1>
       <pre>{JSON.stringify(user, null, 2)}</pre>
     </div>
   );

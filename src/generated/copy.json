@@ -1,5 +1,10 @@
 [
   {
+    "id": "user.page.title",
+    "description": "Page title for /user",
+    "content": "User"
+  },
+  {
     "id": "admin.users.page.title",
     "description": "Page title for /admin/users",
     "content": "Users"
@@ -37,11 +42,6 @@
   {
     "id": "user.profile.page.link.back",
     "description": "Nav link for /user",
-    "content": "User"
-  },
-  {
-    "id": "user.page.title",
-    "description": "Page title for /user",
     "content": "User"
   },
   {
