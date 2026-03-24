@@ -29,7 +29,12 @@ export default async function User() {
         <Text cid="user.page.link.profile" description="Nav link for /user/profile">
           Profile
         </Text>
+
+
       </Link>
+        <p>
+          <Text cid="user.page.page-description" description="a page header description on the users profile page or something" >some random text that is not editable yet....</Text>
+        </p>
     </div>
   );
 }

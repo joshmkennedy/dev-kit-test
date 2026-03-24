@@ -5,6 +5,11 @@
     "content": "User"
   },
   {
+    "id": "demo.for.cms",
+    "description": "",
+    "content": "Demo for CMS"
+  },
+  {
     "id": "admin.users.page.title",
     "description": "Page title for /admin/users",
     "content": "Users"
@@ -48,6 +53,11 @@
     "id": "user.page.link.profile",
     "description": "Nav link for /user/profile",
     "content": "Profile"
+  },
+  {
+    "id": "user.page.page-description",
+    "description": "a page header description on the users profile page or something",
+    "content": "some random text that is not editable yet...."
   },
   {
     "id": "team-member.page-description.more",
